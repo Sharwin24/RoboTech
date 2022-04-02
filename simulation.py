@@ -54,5 +54,4 @@ while 1:
         if event.type == pygame.QUIT:
             sys.exit()
 
-
-pygame.display.update()
+    pygame.display.update()
