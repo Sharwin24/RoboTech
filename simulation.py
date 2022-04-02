@@ -1,14 +1,26 @@
-import pygame
-import sys
+import pygame, sys
 import numpy as np
 from AquaticDrones import *
 
-
+# Functions
 def centerblit(screen, image, pos):
     width, height = image.get_size()
     pos0 = pos[0] - np.round(width / 2)
     pos1 = pos[1] - np.round(height / 2)
     screen.blit(image, (pos0, pos1))
+
+def moveDrone(screen, background, drone, newPos):
+    oldPos = drone.position
+    width, height = drone.image.get_size()
+    oldx = oldPos[0] - np.round(width / 2)
+    oldy = oldPos[1] - np.round(height / 2)
+    pos = (oldx, oldy)
+    
+    screen.blit(background, pos, area=drone.image.get_rect(center=newPos))
+    centerblit(screen, drone.image, newPos)
+
+    drone.position = newPos
+
 
 
 # Graphical constants
@@ -20,9 +32,9 @@ SIZE = WINDOW_WIDTH, WINDOW_HEIGHT
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-num_drones = 3
+num_drones = 10
 DRONE_OFFSET = 40
-DRONE_SPEED = 1
+DRONE_SPEED = 0.1
 
 # Environment Setup
 # give title and dimensions
@@ -43,16 +55,22 @@ for i in range(num_drones):
     droneXPos = SUPERVISOR_POS[0] + DRONE_OFFSET * np.cos(i * angleFromCenter)
     droneYPos = SUPERVISOR_POS[1] + DRONE_OFFSET * np.sin(i * angleFromCenter)
 
-    currentDrone = AquaticDrone(
-        i, (droneXPos, droneYPos), (DRONE_SPEED, i * angleFromCenter), drone)
+    currentDrone = AquaticDrone(i, (droneXPos, droneYPos), (DRONE_SPEED, i * angleFromCenter), drone)
     centerblit(screen, drone, (droneXPos, droneYPos))
     AQSupervisor.addDrone(currentDrone)
 
 
 while 1:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
+        if event.type == pygame.QUIT: sys.exit()
 
+    for curr_drone in AQSupervisor.dronesList:
+        speed = curr_drone.vector[0]
+        oldx, oldy = curr_drone.position
+        newx = oldx + speed * np.cos(curr_drone.vector[1])
+        newy = oldy + speed * np.sin(curr_drone.vector[1])
 
-pygame.display.update()
+        newPos = (newx, newy)
+        moveDrone(screen, background, curr_drone, newPos)
+
+    pygame.display.update()

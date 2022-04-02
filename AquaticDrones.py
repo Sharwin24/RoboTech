@@ -69,6 +69,7 @@ class AquaticDrone():
         return abs(self.getSupervisorPos - self.position) <= range
 
 
+
 @dataclass
 class AquaticSupervisor():
     """Class representation for the supervisor robot that deploys drones with their own subroutines"""
