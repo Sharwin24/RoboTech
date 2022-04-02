@@ -59,6 +59,9 @@ class AquaticDrone():
     def __eq__(self, __o: object) -> bool:
         return self.id == __o.id
 
+    def setAngle(self, theta: float):
+        self.vector[1] = theta
+
     def getSupervisorPos(self) -> Tuple[int, int]:
         return self.supervisor.position
 
