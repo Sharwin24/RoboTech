@@ -1,9 +1,12 @@
 from graphics import *
 
-win = GraphWin('TestWindow', 1000, 800)  # give title and dimensions
+width = 1440
+height = 810
+
+win = GraphWin('TestWindow', width, height)  # give title and dimensions
 #win.yUp() # make right side up coordinates!
 
-img = Image(Point(500, 400), "starter_lake.png")
+img = Image(Point(width / 2, height / 2), "starter_lake75.png")
 img.draw(win)
 
 body = Circle(Point(40, 100), 25)
