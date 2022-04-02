@@ -33,7 +33,10 @@ class StateSpace():
     mustVisitNodes: Set[Position]
     navigationGrid: List[List[Node]]  # 2D Array of Position
 
-    def isGoalState(self):
+    def getFCost() -> int:
+        return 0
+
+    def isGoalState(self) -> bool:
         return len(self.mustVisitNodes) == 0
 
     def __eq__(self, __o: object) -> bool:
