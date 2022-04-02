@@ -1,10 +1,7 @@
 from graphics import *
 
-win = GraphWin('TestWindow', 1000, 800)  # give title and dimensions
-#win.yUp() # make right side up coordinates!
-
-img = Image(Point(500, 400), "starter_lake.png")
-img.draw(win)
+win = GraphWin('AquaSim', 1920, 1080)  # give title and dimensions
+# win.yUp() # make right side up coordinates!
 
 body = Circle(Point(40, 100), 25)
 body.setFill("red")
