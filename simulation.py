@@ -1,38 +1,81 @@
-from graphics import *
+import pygame
+import sys
+import numpy as np
+from AquaticDrones import *
 
-# Global Vars
-width = 1440
-height = 810
-num_drones = 5
-supervisor_start = (720, 405)
+# Functions
+
+
+def centerblit(screen, image, pos):
+    width, height = image.get_size()
+    pos0 = pos[0] - np.round(width / 2)
+    pos1 = pos[1] - np.round(height / 2)
+    screen.blit(image, (pos0, pos1))
+
+
+def moveDrone(screen, background, drone, newPos):
+    oldPos = drone.position
+    width, height = drone.image.get_size()
+    oldx = oldPos[0] - np.round(width / 2)
+    oldy = oldPos[1] - np.round(height / 2)
+    pos = (oldx, oldy)
+
+    screen.blit(background, pos, area=drone.image.get_rect(center=newPos))
+    centerblit(screen, drone.image, newPos)
+
+    drone.position = newPos
+
+
+# Graphical constants
+WINDOW_WIDTH = 1440
+WINDOW_HEIGHT = 810
+SIZE = WINDOW_WIDTH, WINDOW_HEIGHT
+
+# Supervisor size constants
+SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+
+# Drone constants
+num_drones = 10
+DRONE_OFFSET = 40
+DRONE_SPEED = 0.1
 
 # Environment Setup
-win = GraphWin('ASCRSim', width, height, autoflush=False)  # give title and dimensions
+# give title and dimensions
+pygame.init()
+screen = pygame.display.set_mode(SIZE)
+background = pygame.image.load('starter_lake75.png').convert()
+screen.blit(background, (0, 0))
 
-img = Image(Point(width / 2, height / 2), "starter_lake75.png")
-img.draw(win)
 
-# Initialize Objects
-bots = []
-super_p1 = Point(supervisor_start[0] - 7, supervisor_start[1] - 7)
-super_p2 = Point(supervisor_start[0] + 7, supervisor_start[1] + 7)
-supervisor = Rectangle(super_p1, super_p2)
-
-supervisor.draw(win)
-supervisor.setFill("black")
-
-theta = 0
+supervisor = pygame.image.load("supervisor.png")
+AQSupervisor = AquaticSupervisor(-1, SUPERVISOR_POS, [], supervisor)
+centerblit(screen, supervisor, SUPERVISOR_POS)
+droneImage = "Drone.png"
+drone = pygame.image.load(droneImage).convert()
+angleFromCenter = (2 * np.pi) / num_drones
 
 for i in range(num_drones):
-    bots.append(Circle(Point(400 + 20 * i, 400 + 20 * i), 5))
-    bots[i].setFill("black")
-    bots[i].draw(win)
+    droneXPos = SUPERVISOR_POS[0] + DRONE_OFFSET * np.cos(i * angleFromCenter)
+    droneYPos = SUPERVISOR_POS[1] + DRONE_OFFSET * np.sin(i * angleFromCenter)
 
-# Movement Handling
-for i in range(100):
-    for i in range(5):
-        bots[i].move(2, 2)
+    currentDrone = AquaticDrone(
+        i, (droneXPos, droneYPos), (DRONE_SPEED, i * angleFromCenter), drone)
+    centerblit(screen, drone, (droneXPos, droneYPos))
+    AQSupervisor.addDrone(currentDrone)
 
-    update(30)
 
-win.close()
+while 1:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+    for curr_drone in AQSupervisor.dronesList:
+        speed = curr_drone.vector[0]
+        oldx, oldy = curr_drone.position
+        newx = oldx + speed * np.cos(curr_drone.vector[1])
+        newy = oldy + speed * np.sin(curr_drone.vector[1])
+
+        newPos = (newx, newy)
+        moveDrone(screen, background, curr_drone, newPos)
+
+    pygame.display.update()
