@@ -20,7 +20,7 @@ DRONE_SPEED = 1
 
 # Environment Setup
 # give title and dimensions
-win = GraphWin('ASCRSim', WINDOW_WIDTH, WINDOW_HEIGHT, autoflush=False)
+win = GraphWin('ASMRSim', WINDOW_WIDTH, WINDOW_HEIGHT, autoflush=False)
 backgroundImage = Image(
     Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), "starter_lake75.png")
 backgroundImage.draw(win)
