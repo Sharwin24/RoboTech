@@ -49,7 +49,7 @@ class AquaticDroneImage(_BBox):
 class AquaticSupervisor():
     """Class representation for the supervisor robot that deploys drones with their own subroutines"""
     position: Tuple[int, int]
-    dronesList: List[AquaticDrone]
+    dronesList: list
     image: AquaticSupervisorImage
 
 
@@ -66,7 +66,3 @@ class AquaticDrone():
 
     def withinRangeOfSupervisor(self, range: float):
         return abs(self.getSupervisorPos - self.position) <= range
-
-
-if __name__ == "__main__":
-    print("Hello")
