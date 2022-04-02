@@ -40,7 +40,7 @@ DRONE_SPEED = 0.1
 # give title and dimensions
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
-background = pygame.image.load('starter_lake75.png').convert()
+background = pygame.image.load('lake_v2.png').convert()
 screen.blit(background, (0, 0))
 
 
