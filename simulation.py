@@ -7,7 +7,8 @@ num_drones = 5
 supervisor_start = (720, 405)
 
 # Environment Setup
-win = GraphWin('ASCRSim', width, height, autoflush=False)  # give title and dimensions
+# give title and dimensions
+win = GraphWin('ASCRSim', width, height, autoflush=False)
 
 img = Image(Point(width / 2, height / 2), "starter_lake75.png")
 img.draw(win)
