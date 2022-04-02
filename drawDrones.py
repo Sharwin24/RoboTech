@@ -15,7 +15,8 @@ SUPERVISOR_HEIGHT = SUPERVISOR_WIDTH
 # drone constants
 num_drones = 5
 DRONE_RADIUS = 7
-DRONE_DISTANCE_FROM_SUPERVISOR = 14
+DRONE_OFFSET = SUPERVISOR_WIDTH * 2
+DRONE_SPEED = 1
 
 # Environment Setup
 # give title and dimensions
@@ -36,12 +37,18 @@ AQSupervisor.image.draw(win)
 AQSupervisor.image.setFill("black")
 
 # Init and draw drones
-bots = []
-angleFromCenter = 360 / num_drones
+angleFromCenter = (2 * np.pi) / num_drones
 for i in range(num_drones):
+    droneXPos = SUPERVISOR_POS[0] + \
+        DRONE_OFFSET * \
+        np.cos(i * angleFromCenter)
+    droneYPos = SUPERVISOR_POS[1] + \
+        DRONE_OFFSET * np.sin(i * angleFromCenter)
     droneImg = Circle(
-        Point(SUPERVISOR_POS[0], SUPERVISOR_POS[1]), DRONE_RADIUS)
-    currentDrone = AquaticDrone(i, (0, 0), (0, 90), AQSupervisor, droneImg)
+        Point(droneXPos, droneYPos), DRONE_RADIUS)
+    # currentDrone = AquaticDrone(i, (0, 0), (0, 90), AQSupervisor, droneImg)
+    currentDrone = AquaticDrone(
+        i, (droneXPos, droneYPos), (DRONE_SPEED, i * angleFromCenter), droneImg)
     currentDrone.image.setFill("red")
     currentDrone.image.draw(win)
     AQSupervisor.addDrone(currentDrone)
@@ -49,8 +56,8 @@ for i in range(num_drones):
 
 # Move drones and update the window
 for i in range(100):
-    for j in range(num_drones):
-        bots[j].move(2, 2)
+    for drone in AQSupervisor.dronesList:
+        drone.image.move(0, 0)
         update(30)
 
 # Exit
