@@ -72,8 +72,8 @@ Take note of what areas of the lake the drones are more drawn too...
 <li> Implement quadrants to split lake into quadrants for each drone to have their path planned in to improve performance </li>
 <li> Incorporate threading to boost performance </li>
 <li> Implement more GUI features to improve interactivity with parameters </li>
-<li> Write more documentation because you can never have too much docs </li>
+<li> Write more documentation</li>
 </ul>
 
 # Running our code
-Currently, our latest driving code is in [simulation.py](simulation.py). Run the file in order to see the simulation being output on the GUI built using the <code>pygame</code> library
+Currently, our latest driving code is in [simulation.py](simulation.py). Run the file in order to see the simulation being output to the GUI built using the <code>pygame</code> library
