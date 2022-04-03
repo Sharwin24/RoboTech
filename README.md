@@ -51,15 +51,15 @@ We found that our Algae problem was counter-intuitive to a solution like A* Sear
 Code for A* Search can be found in the files:
 
 <ul>
-<li>[text](/pathFind.py)</li> -> source code for A* Search
-<li>[testingPathFinding.py](testingPathFinding.py)</li> -> executable script with tunable parameters and random board generation
+<li><code>pathFind.py</code></li> -> source code for A* Search
+<li><code>testingPathFinding.py</code></li> -> executable script with tunable parameters and random board generation
 </ul>
 
 RRT* is an optimized random sampling algorithm. In essence, random points are sampled given some constraints about the problem and a path is generated to the sampled point. This is repeated up to a certain <code>depth</code> and each layer can bias the generation depending on the state of the problem to improve performance.
 
 Code for RRT* can be found in the files:
 <ul>
-<li>[simulation.py](simulation.py)</li> -> RRT* Implemented into Sim
+<li><code>simulation.py</code></li> -> RRT* Implemented into Sim
 </ul>
 
 Within <code>simulation.py</code>, there are many parameters (with documentation!) that can be tuned to better visualize the varying levels of performance that comes with different number of drones, drone speed, RRT depth, etc. Note that being over-generous with the parameters can induce large computations on the PC and may not run fast or at all. However, once you're past the black screen while the paths are being generated, the simulation will keep going until the <code>MAX_DEPTH</code> of paths for each drone are reached. 
