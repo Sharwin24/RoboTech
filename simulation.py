@@ -83,7 +83,7 @@ drone = pygame.image.load(droneImage).convert()
 angleFromCenter = (2 * np.pi) / num_drones
 
 # Grid
-SHOW_GRID = False
+SHOW_GRID = True
 
 if SHOW_GRID:
     for row in range(thicc, WINDOW_HEIGHT, thicc):
