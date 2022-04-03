@@ -1,15 +1,19 @@
-import pygame, sys
+import pygame
+import sys
 from pathFind import *
 import numpy as np
 from AquaticDrones import *
 np.random.seed(1)
 
 # Functions
+
+
 def centerblit(screen, image, pos):
     width, height = image.get_size()
     pos0 = pos[0] - np.round(width / 2)
     pos1 = pos[1] - np.round(height / 2)
     screen.blit(image, (pos0, pos1))
+
 
 def moveDrone(screen, background, drone, newPos):
     oldPos = drone.position
@@ -17,12 +21,11 @@ def moveDrone(screen, background, drone, newPos):
     oldx = oldPos[0] - np.round(width / 2)
     oldy = oldPos[1] - np.round(height / 2)
     pos = (oldx, oldy)
-    
+
     screen.blit(background, pos, area=drone.image.get_rect(center=newPos))
     centerblit(screen, drone.image, newPos)
 
     drone.position = newPos
-
 
 
 # Graphical constants
@@ -40,6 +43,8 @@ DRONE_OFFSET = 40
 DRONE_SPEED = 0.1
 
 # Algae Processing
+
+
 def makeAlgae(pattern, x, y, xmax, ymax):
     ALGAE_COVERAGE = 0.3
 
@@ -54,6 +59,7 @@ def makeAlgae(pattern, x, y, xmax, ymax):
             return False
     else:
         return ALGAE_COVERAGE
+
 
 # Environment Setup
 pygame.init()
@@ -74,7 +80,7 @@ droneImage = "Drone.png"
 drone = pygame.image.load(droneImage).convert()
 angleFromCenter = (2 * np.pi) / num_drones
 
-#Grid
+# Grid
 SHOW_GRID = False
 
 if SHOW_GRID:
@@ -93,7 +99,8 @@ for row in range(grid_rows):
     curr_row = []
 
     for col in range(grid_cols):
-        pixel = background_arr[col * thicc + thicc // 2][row * thicc + thicc // 2]
+        pixel = background_arr[col * thicc +
+                               thicc // 2][row * thicc + thicc // 2]
         if (pixel[2] > 200):
             if (np.random.random() < makeAlgae("outer", col, row, grid_cols, grid_rows)):
                 curr_row.append(Node((row, col), True, True))
@@ -101,7 +108,6 @@ for row in range(grid_rows):
                 curr_row.append(Node((row, col), True, False))
         else:
             curr_row.append(Node((row, col), False, False))
-        
 
     grid.append(curr_row)
 
@@ -109,13 +115,15 @@ for row in range(grid_rows):
 for row in range(grid_rows):
     for col in range(grid_cols):
         if grid[row][col].isMustVisitNode:
-            centerblit(screen, algae, (col * thicc + thicc // 2, row * thicc + thicc // 2))
+            centerblit(screen, algae, (col * thicc +
+                       thicc // 2, row * thicc + thicc // 2))
 
 for i in range(num_drones):
     droneXPos = SUPERVISOR_POS[0] + DRONE_OFFSET * np.cos(i * angleFromCenter)
     droneYPos = SUPERVISOR_POS[1] + DRONE_OFFSET * np.sin(i * angleFromCenter)
 
-    currentDrone = AquaticDrone(i, (droneXPos, droneYPos), (DRONE_SPEED, i * angleFromCenter), drone)
+    currentDrone = AquaticDrone(
+        i, (droneXPos, droneYPos), (DRONE_SPEED, i * angleFromCenter), drone)
     centerblit(screen, drone, (droneXPos, droneYPos))
     AQSupervisor.addDrone(currentDrone)
 
@@ -123,6 +131,7 @@ for i in range(num_drones):
 # RRT Path Planning
 STEP_SIZE = 0.1
 max_depth = 7
+
 
 def isValid(pixel, x, y):
     if np.linalg.norm(np.array([x, y]) - np.array(SUPERVISOR_POS)) < 23:
@@ -133,6 +142,7 @@ def isValid(pixel, x, y):
 
     else:
         return False
+
 
 def samplePoint(map, paths):
     strength_threshold = 1000
@@ -145,7 +155,8 @@ def samplePoint(map, paths):
             xsamp = np.random.randint(0, WINDOW_WIDTH)
             ysamp = np.random.randint(0, WINDOW_HEIGHT)
 
-        strength = np.linalg.norm(np.array(SUPERVISOR_POS) - np.array([xsamp, ysamp]))
+        strength = np.linalg.norm(
+            np.array(SUPERVISOR_POS) - np.array([xsamp, ysamp]))
 
         if np.random.random() < (strength / strength_threshold)**2:
             return (xsamp, ysamp)
@@ -154,14 +165,14 @@ def samplePoint(map, paths):
 
     return (xsamp, ysamp)
 
+
 def generatePath(map, sampled, path, step):
     delta = np.array(sampled) - np.array(path[-1])
     dist = np.linalg.norm(delta)
-    n = int (np.floor(dist / step))
+    n = int(np.floor(dist / step))
     for i in range(n):
         x = path[-1][0] + delta[0] / dist * step
         y = path[-1][1] + delta[1] / dist * step
-
 
         path.append((x, y))
 
@@ -181,10 +192,12 @@ depth = 0
 
 while 1:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
+        if event.type == pygame.QUIT:
+            sys.exit()
 
     for i in range(num_drones):
-        moveDrone(screen, background, AQSupervisor.dronesList[i], paths[i][depth])
+        moveDrone(screen, background,
+                  AQSupervisor.dronesList[i], paths[i][depth])
 
     depth = depth + 1
 
