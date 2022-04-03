@@ -38,9 +38,11 @@ thicc = 12
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-num_drones = 9
+num_drones = 15
 DRONE_OFFSET = 40
 DRONE_SPEED = 0.1
+STEP_SIZE = 0.3
+max_depth = 20
 
 # Algae Processing
 
@@ -129,10 +131,6 @@ for i in range(num_drones):
 
 
 # RRT Path Planning
-STEP_SIZE = 0.1
-max_depth = 7
-
-
 def isValid(pixel, x, y):
     if np.linalg.norm(np.array([x, y]) - np.array(SUPERVISOR_POS)) < 33:
         return False
