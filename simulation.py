@@ -37,18 +37,15 @@ DRONE_OFFSET = 40
 DRONE_SPEED = 0.1
 
 # Environment Setup
-# give title and dimensions
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
 background = pygame.image.load('lake_v2.png').convert()
 screen.blit(background, (0, 0))
+algae = pygame.image.load('algae.png')
 
 screen.lock()
-background_arr = pygame.surfarray.array2d(screen)
-print(background_arr[0])
-
+background_arr = pygame.surfarray.array3d(screen)
 screen.unlock()
-
 
 supervisor = pygame.image.load("supervisor.png")
 AQSupervisor = AquaticSupervisor(-1, SUPERVISOR_POS, [], supervisor)
@@ -59,14 +56,25 @@ angleFromCenter = (2 * np.pi) / num_drones
 
 #Grid
 thicc = 12
+SHOW_GRID = False
 
-for row in range(thicc, WINDOW_HEIGHT, thicc):
-    pygame.draw.line(screen, (0, 0, 0), (0, row), (WINDOW_WIDTH, row))
+if SHOW_GRID:
+    for row in range(thicc, WINDOW_HEIGHT, thicc):
+        pygame.draw.line(screen, (0, 0, 0), (0, row), (WINDOW_WIDTH, row))
 
-for col in range(thicc, WINDOW_WIDTH, thicc):
-    pygame.draw.line(screen, (0, 0, 0), (col, 0), (col, WINDOW_HEIGHT))
+    for col in range(thicc, WINDOW_WIDTH, thicc):
+        pygame.draw.line(screen, (0, 0, 0), (col, 0), (col, WINDOW_HEIGHT))
 
+grid_rows = np.floor(WINDOW_HEIGHT / thicc)
+grid_cols = np.floor(WINDOW_WIDTH / thicc)
 
+grid = []
+
+for row in range(grid_rows):
+    curr_row = []
+
+    for col in range(grid_cols):
+        curr_row.append(False)
 
 
 
