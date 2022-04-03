@@ -1,11 +1,13 @@
 from dataclasses import dataclass
-from turtle import position, width
 from typing import List
 from typing import Tuple
 from typing import Set
 from typing_extensions import Self
+
+from numpy import inf
 from utility import *
 from queue import PriorityQueue
+import sys
 
 
 @dataclass
@@ -45,14 +47,16 @@ class NavigationGrid():
 
 def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
     assert(isinstance(p, Position))
-    up = Position(p.x, p.y + 1)
-    down = Position(p.x, p.y - 1)
-    left = Position(p.x - 1, p.y)
-    right = Position(p.x + 1, p.y)
-    upRight = Position(p.x + 1, p.y + 1)
-    upLeft = Position(p.x - 1, p.y + 1)
-    downRight = Position(p.x + 1, p.y - 1)
-    downLeft = Position(p.x - 1, p.y - 1)
+    pX = p.x
+    pY = p.y
+    up = Position(pX, pY + 1)
+    down = Position(pX, pY - 1)
+    left = Position(pX - 1, pY)
+    right = Position(pX + 1, pY)
+    upRight = Position(pX + 1, pY + 1)
+    upLeft = Position(pX - 1, pY + 1)
+    downRight = Position(pX + 1, pY - 1)
+    downLeft = Position(pX - 1, pY - 1)
     possiblePositions = [up, down, left, right,
                          upRight, upLeft, downRight, downLeft]
     neighbors = []
@@ -66,14 +70,18 @@ def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
 class StateSpace():
     dronePosition: Position
     path: List[Position]
-    mustVisitNodes: Set[Position]
+    mustVisitNodes: List[Position]
     navigationGrid: NavigationGrid  # 2D Array of Position
 
     def getFCost(self) -> float:
         return self.getGCost() + self.getHCost()
 
     def getHCost(self) -> float:
-        return 0  # No Heuristic yet
+        currentMax = 0
+        for p in self.mustVisitNodes:
+            currentMax = max(
+                currentMax, getEuclideanDistance(self.dronePosition, p))
+        return currentMax
 
     def getGCost(self) -> int:
         return len(self.path)
@@ -86,9 +94,8 @@ class StateSpace():
         successiveStates = []
         for p in neighborStates:
             newMVNodes = self.mustVisitNodes.copy()
-            # print("OLD MV:" + str(len(newMVNodes)))
-            newMVNodes.discard(p)
-            # print("New MV:" + str(len(newMVNodes)))
+            if p in self.mustVisitNodes:
+                newMVNodes.remove(p)
             newPath = self.path.copy()
             newPath.append(p)
             newState = StateSpace(
@@ -99,9 +106,6 @@ class StateSpace():
 
     def getPath(self) -> List[Position]:
         return self.path
-
-    def getMVNodes(self) -> Set[Position]:
-        return self.mustVisitNodes
 
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, StateSpace):
@@ -125,10 +129,10 @@ def shortestPath(startingState: StateSpace) -> Tuple[int, List[Position]]:
     '''Finds the shortest path, such that all MVNodes are visited, from a starting state using A* search'''
     totalNodesTraversed = 0
     q = PQ()
-    q.put((startingState.getFCost(), startingState))
+    q._put((startingState.getFCost(), startingState))
     visitedStates = set()
-    while not q.empty():
-        currentState = q.get()
+    while q._qsize() != 0:
+        currentState = q._get()
         assert(isinstance(currentState[1], StateSpace))
         totalNodesTraversed += 1
         if currentState[1].isGoalState():
@@ -136,7 +140,7 @@ def shortestPath(startingState: StateSpace) -> Tuple[int, List[Position]]:
         neighbors = currentState[1].getSuccessors()
         for state in neighbors:
             assert(isinstance(state, StateSpace))
-            if not q.contains(state) and not visitedStates.__contains__(state):
-                q.put((state.getFCost(), state))
+            if not q.contains(state) and not state in visitedStates:
+                q._put((state.getFCost(), state))
         visitedStates.add(currentState[1])
     return (0, [])
