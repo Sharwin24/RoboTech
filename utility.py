@@ -3,8 +3,6 @@ from typing import List
 from typing import Tuple
 from typing import Set
 
-from pathFind import NavigationGrid, StateSpace, Node
-
 
 @dataclass
 class Position():
@@ -20,8 +18,12 @@ class Position():
         else:
             return False
 
+    def __repr__(self) -> str:
+        return "[" + str(self.x) + "," + str(self.y) + "]"
 
-def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[StateSpace]:
+
+def getNeighbors(p: Position, navGrid) -> List[Position]:
+    assert(isinstance(p, Position))
     up = Position(p.x, p.y + 1)
     down = Position(p.x, p.y - 1)
     left = Position(p.x - 1, p.y)
@@ -34,7 +36,8 @@ def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[StateSpace]:
                          upRight, upLeft, downRight, downLeft]
     neighbors = []
     for p in possiblePositions:
-        pass
+        if navGrid.inBounds(p) and not navGrid.isWall(p):
+            neighbors.append(p)
     return neighbors
 
 
