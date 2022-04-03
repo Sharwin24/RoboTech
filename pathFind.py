@@ -7,19 +7,6 @@ from utility import *
 
 
 @dataclass
-class NavigationGrid():
-    grid: List[List[Node]]
-
-    def inBounds(self, p: Position) -> bool:
-        height = len(self.grid)
-        width = len(self.grid[0])  # Assuming a 2D Matrix
-        return p.x >= 0 and p.x < width and p.y >= 0 and p.y < height
-
-    def isWall(self, p: Position) -> bool:
-        return self.grid[p.y][p.x].isWall
-
-
-@dataclass
 class Node():
     position: Position
     isTraversable: bool
@@ -36,6 +23,19 @@ class Node():
 
     def __hash__(self) -> int:
         return hash(self.position) + hash(self.isMustVisitNode) + hash(self.isTraversable)
+
+
+@dataclass
+class NavigationGrid():
+    grid: List[List[Node]]
+
+    def inBounds(self, p: Position) -> bool:
+        height = len(self.grid)
+        width = len(self.grid[0])  # Assuming a 2D Matrix
+        return p.x >= 0 and p.x < width and p.y >= 0 and p.y < height
+
+    def isWall(self, p: Position) -> bool:
+        return self.grid[p.y][p.x].isWall
 
 
 @dataclass
