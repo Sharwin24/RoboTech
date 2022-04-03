@@ -51,7 +51,7 @@ We found that our Algae problem was counter-intuitive to a solution like A* Sear
 Code for A* Search can be found in the files:
 
 <ul>
-<li>[pathFind.py](pathFind.py)</li> -> source code for A* Search
+<li>[text](/pathFind.py)</li> -> source code for A* Search
 <li>[testingPathFinding.py](testingPathFinding.py)</li> -> executable script with tunable parameters and random board generation
 </ul>
 
