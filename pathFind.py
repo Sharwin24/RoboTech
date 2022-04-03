@@ -82,11 +82,7 @@ class StateSpace():
         return len(self.mustVisitNodes) == 0
 
     def getSuccessors(self) -> List[Self]:
-<<<<<<< HEAD
-        neighborStates = getNeighbors(self.position, self.navigationGrid)
-=======
         neighborStates = getNeighbors(self.dronePosition, self.navigationGrid)
->>>>>>> afece7049054a48192e0001dd42fb1c3e810c032
         successiveStates = []
         for p in neighborStates:
             newMVNodes = self.mustVisitNodes.copy()
