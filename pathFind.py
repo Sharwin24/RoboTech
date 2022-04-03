@@ -70,7 +70,7 @@ def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
 class StateSpace():
     dronePosition: Position
     path: List[Position]
-    mustVisitNodes: List[Position]
+    mustVisitNodes: Set[Position]
     navigationGrid: NavigationGrid  # 2D Array of Position
 
     def getFCost(self) -> float:
@@ -117,7 +117,7 @@ class StateSpace():
         return self.getFCost() < other.getFCost()
 
     def __hash__(self) -> int:
-        return hash(self.dronePosition)  # + hash(self.mustVisitNodes)
+        return hash(self.dronePosition) + hash(tuple(self.mustVisitNodes))
 
 
 class PQ(PriorityQueue):

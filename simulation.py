@@ -32,17 +32,17 @@ def moveDrone(screen, background, drone, newPos):
 WINDOW_WIDTH = 1440
 WINDOW_HEIGHT = 810
 SIZE = WINDOW_WIDTH, WINDOW_HEIGHT
-thicc = 12
+THICC = 12
 
 # Supervisor size constants
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-num_drones = 15
+NUM_DRONES = 15
 DRONE_OFFSET = 40
 DRONE_SPEED = 0.1
 STEP_SIZE = 0.3
-max_depth = 20
+MAX_DEPTH = 20
 
 # Algae Processing
 
@@ -50,7 +50,7 @@ max_depth = 20
 def makeAlgae(pattern, x, y, xmax, ymax):
     ALGAE_COVERAGE = 0.3
 
-    if (np.linalg.norm(np.array(SUPERVISOR_POS) - np.array([x * thicc + thicc / 2, y * thicc + thicc / 2])) < 6 + DRONE_OFFSET):
+    if (np.linalg.norm(np.array(SUPERVISOR_POS) - np.array([x * THICC + THICC / 2, y * THICC + THICC / 2])) < 6 + DRONE_OFFSET):
         return False
 
     if pattern == "outer":
@@ -80,20 +80,20 @@ AQSupervisor = AquaticSupervisor(-1, SUPERVISOR_POS, [], supervisor)
 centerblit(screen, supervisor, SUPERVISOR_POS)
 droneImage = "Drone.png"
 drone = pygame.image.load(droneImage).convert()
-angleFromCenter = (2 * np.pi) / num_drones
+angleFromCenter = (2 * np.pi) / NUM_DRONES
 
 # Grid
 SHOW_GRID = True
 
 if SHOW_GRID:
-    for row in range(thicc, WINDOW_HEIGHT, thicc):
+    for row in range(THICC, WINDOW_HEIGHT, THICC):
         pygame.draw.line(screen, (0, 0, 0), (0, row), (WINDOW_WIDTH, row))
 
-    for col in range(thicc, WINDOW_WIDTH, thicc):
+    for col in range(THICC, WINDOW_WIDTH, THICC):
         pygame.draw.line(screen, (0, 0, 0), (col, 0), (col, WINDOW_HEIGHT))
 
-grid_rows = WINDOW_HEIGHT // thicc
-grid_cols = WINDOW_WIDTH // thicc
+grid_rows = WINDOW_HEIGHT // THICC
+grid_cols = WINDOW_WIDTH // THICC
 
 grid = []
 
@@ -101,8 +101,8 @@ for row in range(grid_rows):
     curr_row = []
 
     for col in range(grid_cols):
-        pixel = background_arr[col * thicc +
-                               thicc // 2][row * thicc + thicc // 2]
+        pixel = background_arr[col * THICC +
+                               THICC // 2][row * THICC + THICC // 2]
         if (pixel[2] > 200):
             if (np.random.random() < makeAlgae("outer", col, row, grid_cols, grid_rows)):
                 curr_row.append(Node((row, col), True, True))
@@ -117,10 +117,10 @@ for row in range(grid_rows):
 for row in range(grid_rows):
     for col in range(grid_cols):
         if grid[row][col].isMustVisitNode:
-            centerblit(screen, algae, (col * thicc +
-                       thicc // 2, row * thicc + thicc // 2))
+            centerblit(screen, algae, (col * THICC +
+                       THICC // 2, row * THICC + THICC // 2))
 
-for i in range(num_drones):
+for i in range(NUM_DRONES):
     droneXPos = SUPERVISOR_POS[0] + DRONE_OFFSET * np.cos(i * angleFromCenter)
     droneYPos = SUPERVISOR_POS[1] + DRONE_OFFSET * np.sin(i * angleFromCenter)
 
@@ -135,7 +135,7 @@ def isValid(pixel, x, y):
     if np.linalg.norm(np.array([x, y]) - np.array(SUPERVISOR_POS)) < 33:
         return False
 
-    if pixel[2] > 200: 
+    if pixel[2] > 200:
         return True
 
     else:
@@ -172,7 +172,7 @@ def generatePath(map, sampled, path, step):
         x = path[-1][0] + delta[0] / dist * step
         y = path[-1][1] + delta[1] / dist * step
 
-        if isValid(map[int (x)][int (y)], x, y):
+        if isValid(map[int(x)][int(y)], x, y):
             path.append((x, y))
         else:
             break
@@ -183,8 +183,8 @@ for drone in AQSupervisor.dronesList:
     paths.append([drone.position])
 
 
-for depth in range(max_depth):
-    for i in range(num_drones):
+for depth in range(MAX_DEPTH):
+    for i in range(NUM_DRONES):
         sampled = samplePoint(background_arr, paths[i])
         generatePath(background_arr, sampled, paths[i], STEP_SIZE)
 
@@ -196,7 +196,7 @@ while 1:
         if event.type == pygame.QUIT:
             sys.exit()
 
-    for i in range(num_drones):
+    for i in range(NUM_DRONES):
         moveDrone(screen, background,
                   AQSupervisor.dronesList[i], paths[i][depth])
 

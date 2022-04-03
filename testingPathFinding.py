@@ -1,7 +1,7 @@
 from pathFind import *
 import numpy as np
 
-GRID_SIZE = 8
+GRID_SIZE = 15
 grid = []
 DRONE_POS = Position(2, 2)
 
@@ -11,12 +11,12 @@ for row in range(GRID_SIZE):
         canGo = row != 0 and row != GRID_SIZE - 1 and col != 0 and col != GRID_SIZE - 1
         isDrone = row == 2 and col == 2
         gridRow.append(
-            Node(Position(col, row), canGo and not isDrone, np.random.random() <= 0.1 and canGo and not isDrone))
+            Node(Position(col, row), canGo and not isDrone, np.random.random() <= 0.05 and canGo and not isDrone))
     grid.append(gridRow)
 
 navGrid = NavigationGrid(grid)
 
-MVNodes = []
+MVNodes = set()
 for r in range(GRID_SIZE):
     for c in range(GRID_SIZE):
         n = grid[r][c]
@@ -25,7 +25,7 @@ for r in range(GRID_SIZE):
             print("x", end="")
         elif n.isMustVisitNode:
             print("@", end="")
-            MVNodes.append(n.position)
+            MVNodes.add(n.position)
         elif n.isTraversable:
             print(".", end="")
         else:
