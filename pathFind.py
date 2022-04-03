@@ -7,7 +7,6 @@ from typing_extensions import Self
 from numpy import inf
 from utility import *
 from queue import PriorityQueue
-import sys
 
 
 @dataclass
@@ -143,4 +142,4 @@ def shortestPath(startingState: StateSpace) -> Tuple[int, List[Position]]:
             if not q.contains(state) and not state in visitedStates:
                 q._put((state.getFCost(), state))
         visitedStates.add(currentState[1])
-    return (0, [])
+    return (0, [])  # No Path found
