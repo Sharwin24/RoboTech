@@ -38,11 +38,11 @@ THICC = 12
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-NUM_DRONES = 20  # 15
+NUM_DRONES = 24  # 15
 DRONE_OFFSET = 50  # 40
 DRONE_SPEED = 0.1
-STEP_SIZE = 0.5  # 0.3
-MAX_DEPTH = 25  # 20
+STEP_SIZE = 0.4  # 0.3
+MAX_DEPTH = 23  # 20
 
 # Algae Processing
 
@@ -113,12 +113,15 @@ for row in range(grid_rows):
 
     grid.append(curr_row)
 
-
+MVNodes = set()
 for row in range(grid_rows):
     for col in range(grid_cols):
         if grid[row][col].isMustVisitNode:
+            assert(isinstance(grid[row][col], Node))
+            MVNodes.add(grid[row][col].position)
             centerblit(screen, algae, (col * THICC +
                        THICC // 2, row * THICC + THICC // 2))
+
 
 for i in range(NUM_DRONES):
     droneXPos = SUPERVISOR_POS[0] + DRONE_OFFSET * np.cos(i * angleFromCenter)
@@ -190,7 +193,6 @@ for depth in range(MAX_DEPTH):
 
 
 depth = 0
-
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
