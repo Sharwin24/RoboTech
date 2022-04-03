@@ -18,8 +18,12 @@ class Position():
         else:
             return False
 
+    def __repr__(self) -> str:
+        return "[" + str(self.x) + "," + str(self.y) + "]"
 
-def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
+
+def getNeighbors(p: Position, navGrid) -> List[Position]:
+    assert(isinstance(p, Position))
     up = Position(p.x, p.y + 1)
     down = Position(p.x, p.y - 1)
     left = Position(p.x - 1, p.y)
