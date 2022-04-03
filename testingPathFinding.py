@@ -2,7 +2,6 @@ from pathFind import *
 import numpy as np
 
 GRID_SIZE = 10
-DRONE_POS = Position(2, 2)
 grid = []
 
 for row in range(GRID_SIZE):
@@ -11,16 +10,17 @@ for row in range(GRID_SIZE):
         canGo = row != 0 and row != GRID_SIZE - 1 and col != 0 and col != GRID_SIZE - 1
         isDrone = row == 2 and col == 2
         gridRow.append(
-            Node((col, row), canGo and not isDrone, np.random.random() <= 0.1 and canGo and not isDrone))
+            Node((col, row), canGo and not isDrone, np.random.random() <= 0.05 and canGo and not isDrone))
     grid.append(gridRow)
 
+navGrid = NavigationGrid(grid)
 
 MVNodes = set()
 for r in range(GRID_SIZE):
     for c in range(GRID_SIZE):
         n = grid[r][c]
         assert(isinstance(n, Node))
-        if n.position == DRONE_POS:
+        if n.position == (2, 2):
             print("x", end="")
         elif n.isMustVisitNode:
             print("@", end="")
@@ -31,8 +31,7 @@ for r in range(GRID_SIZE):
             print("#", end="")
     print("\n")
 
-
-startState = StateSpace(DRONE_POS, [], MVNodes, NavigationGrid(grid))
+startState = StateSpace(Position(2, 2), [], MVNodes, navGrid)
 
 distance_path = shortestPath(startState)
-print(distance_path[0] + " | " + distance_path[1])
+print(str(distance_path[0]) + " | " + str(distance_path[1]))

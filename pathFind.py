@@ -66,7 +66,7 @@ def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
 class StateSpace():
     dronePosition: Position
     path: List[Position]
-    mustVisitNodes: Set[Node]
+    mustVisitNodes: Set[Position]
     navigationGrid: NavigationGrid  # 2D Array of Position
 
     def getFCost(self) -> float:
@@ -75,7 +75,7 @@ class StateSpace():
     def getHCost(self) -> float:
         return 0  # No Heuristic yet
 
-    def getGCost(self) -> float:
+    def getGCost(self) -> int:
         return len(self.path)
 
     def isGoalState(self) -> bool:
@@ -86,15 +86,14 @@ class StateSpace():
         successiveStates = []
         for p in neighborStates:
             newMVNodes = self.mustVisitNodes.copy()
-            # Attempt to remove the MVNode if it exists
-            for n in self.mustVisitNodes:
-                if n.position == p:
-                    newMVNodes.remove(n)
-                # Add explored state to path to that state
-                newPath = self.path.copy().append(p)
-                newState = StateSpace(
-                    p, newPath, newMVNodes, self.navigationGrid)
-                successiveStates.append(newState)
+            # print("OLD MV:" + str(len(newMVNodes)))
+            newMVNodes.discard(p)
+            # print("New MV:" + str(len(newMVNodes)))
+            newPath = self.path.copy()
+            newPath.append(p)
+            newState = StateSpace(
+                p, newPath, newMVNodes, self.navigationGrid)
+            successiveStates.append(newState)
 
         return successiveStates
 
@@ -110,17 +109,25 @@ class StateSpace():
         else:
             return False
 
+    def __lt__(self, other: Self):
+        return self.getFCost() < other.getFCost()
+
     def __hash__(self) -> int:
-        return hash(self.dronePosition) + hash(self.mustVisitNodes)
+        return hash(self.dronePosition)  # + hash(self.mustVisitNodes)
+
+
+class PQ(PriorityQueue):
+    def contains(self, s: StateSpace):
+        return s in self.queue
 
 
 def shortestPath(startingState: StateSpace) -> Tuple[int, List[Position]]:
     '''Finds the shortest path, such that all MVNodes are visited, from a starting state using A* search'''
     totalNodesTraversed = 0
-    q = PriorityQueue()
+    q = PQ()
     q.put((startingState.getFCost(), startingState))
     visitedStates = set()
-    while q.not_empty:
+    while not q.empty():
         currentState = q.get()
         assert(isinstance(currentState[1], StateSpace))
         totalNodesTraversed += 1
@@ -128,7 +135,8 @@ def shortestPath(startingState: StateSpace) -> Tuple[int, List[Position]]:
             return (totalNodesTraversed, currentState[1].getPath())
         neighbors = currentState[1].getSuccessors()
         for state in neighbors:
-            if state not in q and state not in visitedStates:
-                q.put(state)
+            assert(isinstance(state, StateSpace))
+            if not q.contains(state) and not visitedStates.__contains__(state):
+                q.put((state.getFCost(), state))
         visitedStates.add(currentState[1])
-    return None
+    return (0, [])
