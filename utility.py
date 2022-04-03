@@ -21,7 +21,7 @@ class Position():
             return False
 
 
-def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[StateSpace]:
+def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
     up = Position(p.x, p.y + 1)
     down = Position(p.x, p.y - 1)
     left = Position(p.x - 1, p.y)
@@ -34,7 +34,8 @@ def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[StateSpace]:
                          upRight, upLeft, downRight, downLeft]
     neighbors = []
     for p in possiblePositions:
-        pass
+        if navGrid.inBounds(p) and not navGrid.isWall(p):
+            neighbors.append(p)
     return neighbors
 
 

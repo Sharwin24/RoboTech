@@ -11,27 +11,30 @@ class NavigationGrid():
     width: int
     height: int
 
-    def inBounds(p: Position) -> bool:
+    def inBounds(self, p: Position) -> bool:
         pass
+
+    def isWall(self, p: Position) -> bool:
+        return self.grid[p.y][p.x].isWall
 
 
 @dataclass
 class Node():
     position: Position
-    hasAlgae: bool
-    isWall: bool
+    isTraversable: bool
+    isMustVisitNode: bool
 
-    def removeAlgae(self):
-        self.hasAlgae = False
+    def visitNode(self):
+        self.isMustVisitNode = False
 
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, Node):
-            return self.position == __o.position and self.hasAlgae == __o.hasAlgae and self.isWall == __o.isWall
+            return self.position == __o.position and self.isMustVisitNode == __o.isMustVisitNode and self.isTraversable == __o.isTraversable
         else:
             return False
 
     def __hash__(self) -> int:
-        return hash(self.position) + hash(self.hasAlgae) + hash(self.isWall)
+        return hash(self.position) + hash(self.isMustVisitNode) + hash(self.isTraversable)
 
 
 @dataclass
