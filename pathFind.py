@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from turtle import width
+from turtle import position, width
 from typing import List
 from typing import Tuple
 from typing import Set
@@ -40,7 +40,7 @@ class Node():
 
 @dataclass
 class StateSpace():
-    dronePosition: Position
+    position: Position
     path: List[Position]
     mustVisitNodes: Set[Node]
     navigationGrid: NavigationGrid  # 2D Array of Position
@@ -58,22 +58,36 @@ class StateSpace():
         return len(self.mustVisitNodes) == 0
 
     def getSuccessors(self) -> List[StateSpace]:
-        pass
+        neighborStates = getNeighbors(self.position, self.navigationGrid)
+        successiveStates = []
+        for p in neighborStates:
+            newMVNodes = self.mustVisitNodes.copy()
+            # Attempt to remove the MVNode if it exists
+            for n in self.mustVisitNodes:
+                if n.position == p:
+                    newMVNodes.remove(n)
+                # Add explored state to path to that state
+                newPath = self.path.copy().append(p)
+                newState = StateSpace(
+                    p, newPath, newMVNodes, self.navigationGrid)
+                successiveStates.append(newState)
+
+        return successiveStates
 
     def getPath(self) -> List[Position]:
         return self.path
 
-    def getMVNodes(self) -> Set[Node]:
+    def getMVNodes(self) -> Set[Position]:
         return self.mustVisitNodes
 
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, StateSpace):
-            return self.mustVisitNodes == __o.mustVisitNodes and self.dronePosition == __o.dronePosition
+            return self.mustVisitNodes == __o.mustVisitNodes and self.position == __o.position
         else:
             return False
 
     def __hash__(self) -> int:
-        return hash(self.dronePosition) + hash(self.mustVisitNodes)
+        return hash(self.position) + hash(self.mustVisitNodes)
 
 
 @dataclass
