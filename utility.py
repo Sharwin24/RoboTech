@@ -3,8 +3,6 @@ from typing import List
 from typing import Tuple
 from typing import Set
 
-from pathFind import NavigationGrid, StateSpace, Node
-
 
 @dataclass
 class Position():
