@@ -80,7 +80,7 @@ class StateSpace():
         currentMax = 0
         for p in self.mustVisitNodes:
             currentMax = max(
-                currentMax, getEuclideanDistance(self.dronePosition, p))
+                currentMax, getManhattanDistance(self.dronePosition, p))
         return currentMax
 
     def getGCost(self) -> int:
