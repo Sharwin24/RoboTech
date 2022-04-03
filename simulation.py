@@ -32,7 +32,7 @@ SIZE = WINDOW_WIDTH, WINDOW_HEIGHT
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-num_drones = 10
+num_drones = 4
 DRONE_OFFSET = 40
 DRONE_SPEED = 0.1
 
@@ -43,6 +43,12 @@ screen = pygame.display.set_mode(SIZE)
 background = pygame.image.load('lake_v2.png').convert()
 screen.blit(background, (0, 0))
 
+screen.lock()
+background_arr = pygame.surfarray.array2d(screen)
+print(background_arr[0])
+
+screen.unlock()
+
 
 supervisor = pygame.image.load("supervisor.png")
 AQSupervisor = AquaticSupervisor(-1, SUPERVISOR_POS, [], supervisor)
@@ -50,6 +56,19 @@ centerblit(screen, supervisor, SUPERVISOR_POS)
 droneImage = "Drone.png"
 drone = pygame.image.load(droneImage).convert()
 angleFromCenter = (2 * np.pi) / num_drones
+
+#Grid
+thicc = 12
+
+for row in range(thicc, WINDOW_HEIGHT, thicc):
+    pygame.draw.line(screen, (0, 0, 0), (0, row), (WINDOW_WIDTH, row))
+
+for col in range(thicc, WINDOW_WIDTH, thicc):
+    pygame.draw.line(screen, (0, 0, 0), (col, 0), (col, WINDOW_HEIGHT))
+
+
+
+
 
 for i in range(num_drones):
     droneXPos = SUPERVISOR_POS[0] + DRONE_OFFSET * np.cos(i * angleFromCenter)
@@ -71,6 +90,6 @@ while 1:
         newy = oldy + speed * np.sin(curr_drone.vector[1])
 
         newPos = (newx, newy)
-        moveDrone(screen, background, curr_drone, newPos)
+        #moveDrone(screen, background, curr_drone, newPos)
 
     pygame.display.update()
