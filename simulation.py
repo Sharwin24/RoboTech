@@ -35,7 +35,7 @@ thicc = 12
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-num_drones = 4
+num_drones = 9
 DRONE_OFFSET = 40
 DRONE_SPEED = 0.1
 
@@ -125,7 +125,7 @@ STEP_SIZE = 0.1
 max_depth = 7
 
 def isValid(pixel, x, y):
-    if np.linalg.norm(np.array([x, y]) - np.array(SUPERVISOR_POS)) < 23:
+    if np.linalg.norm(np.array([x, y]) - np.array(SUPERVISOR_POS)) < 33:
         return False
 
     if pixel[2] > 200:
@@ -162,8 +162,10 @@ def generatePath(map, sampled, path, step):
         x = path[-1][0] + delta[0] / dist * step
         y = path[-1][1] + delta[1] / dist * step
 
-
-        path.append((x, y))
+        if isValid(map[int (x)][int (y)], x, y):
+            path.append((x, y))
+        else:
+            break
 
 
 paths = []

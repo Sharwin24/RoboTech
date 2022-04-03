@@ -21,13 +21,9 @@ class Position():
     def __repr__(self) -> str:
         return "[" + str(self.x) + "," + str(self.y) + "]"
 
-<<<<<<< HEAD
-def getNeighbors(p: Position, navGrid) -> List[Position]:
-=======
 
 def getNeighbors(p: Position, navGrid) -> List[Position]:
     assert(isinstance(p, Position))
->>>>>>> afece7049054a48192e0001dd42fb1c3e810c032
     up = Position(p.x, p.y + 1)
     down = Position(p.x, p.y - 1)
     left = Position(p.x - 1, p.y)
