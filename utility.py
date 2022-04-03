@@ -19,7 +19,7 @@ class Position():
             return False
 
 
-def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
+def getNeighbors(p: Position, navGrid) -> List[Position]:
     up = Position(p.x, p.y + 1)
     down = Position(p.x, p.y - 1)
     left = Position(p.x - 1, p.y)

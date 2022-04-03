@@ -3,6 +3,7 @@ from turtle import position, width
 from typing import List
 from typing import Tuple
 from typing import Set
+from typing_extensions import Self
 from utility import *
 
 
@@ -57,7 +58,7 @@ class StateSpace():
     def isGoalState(self) -> bool:
         return len(self.mustVisitNodes) == 0
 
-    def getSuccessors(self) -> List[StateSpace]:
+    def getSuccessors(self) -> List[Self]:
         neighborStates = getNeighbors(self.position, self.navigationGrid)
         successiveStates = []
         for p in neighborStates:
