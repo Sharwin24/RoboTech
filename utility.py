@@ -21,7 +21,33 @@ class Position():
     def __repr__(self) -> str:
         return "[" + str(self.x) + "," + str(self.y) + "]"
 
+<<<<<<< HEAD
+def getNeighbors(p: Position, navGrid) -> List[Position]:
+=======
 
+<<<<<<< HEAD
+=======
+def getNeighbors(p: Position, navGrid) -> List[Position]:
+    assert(isinstance(p, Position))
+>>>>>>> afece7049054a48192e0001dd42fb1c3e810c032
+    up = Position(p.x, p.y + 1)
+    down = Position(p.x, p.y - 1)
+    left = Position(p.x - 1, p.y)
+    right = Position(p.x + 1, p.y)
+    upRight = Position(p.x + 1, p.y + 1)
+    upLeft = Position(p.x - 1, p.y + 1)
+    downRight = Position(p.x + 1, p.y - 1)
+    downLeft = Position(p.x - 1, p.y - 1)
+    possiblePositions = [up, down, left, right,
+                         upRight, upLeft, downRight, downLeft]
+    neighbors = []
+    for p in possiblePositions:
+        if navGrid.inBounds(p) and not navGrid.isWall(p):
+            neighbors.append(p)
+    return neighbors
+
+
+>>>>>>> pygameSim
 def getManhattanDistance(p1: Position, p2: Position) -> int:
     return abs(p2.x - p1.x) + abs(p2.y - p1.y)
 
