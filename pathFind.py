@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from turtle import width
 from typing import List
 from typing import Tuple
 from typing import Set
@@ -8,11 +9,11 @@ from utility import *
 @dataclass
 class NavigationGrid():
     grid: List[List[Node]]
-    width: int
-    height: int
 
     def inBounds(self, p: Position) -> bool:
-        pass
+        height = len(self.grid)
+        width = len(self.grid[0])  # Assuming a 2D Matrix
+        return p.x >= 0 and p.x < width and p.y >= 0 and p.y < height
 
     def isWall(self, p: Position) -> bool:
         return self.grid[p.y][p.x].isWall
@@ -41,7 +42,7 @@ class Node():
 class StateSpace():
     dronePosition: Position
     path: List[Position]
-    mustVisitNodes: Set[Position]
+    mustVisitNodes: Set[Node]
     navigationGrid: NavigationGrid  # 2D Array of Position
 
     def getFCost(self) -> float:
@@ -62,7 +63,7 @@ class StateSpace():
     def getPath(self) -> List[Position]:
         return self.path
 
-    def getMVNodes(self) -> Set[Position]:
+    def getMVNodes(self) -> Set[Node]:
         return self.mustVisitNodes
 
     def __eq__(self, __o: object) -> bool:
