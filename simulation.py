@@ -38,11 +38,11 @@ THICC = 12
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-NUM_DRONES = 15
-DRONE_OFFSET = 40
+NUM_DRONES = 20  # 15
+DRONE_OFFSET = 50  # 40
 DRONE_SPEED = 0.1
-STEP_SIZE = 0.3
-MAX_DEPTH = 20
+STEP_SIZE = 0.5  # 0.3
+MAX_DEPTH = 25  # 20
 
 # Algae Processing
 
@@ -83,7 +83,7 @@ drone = pygame.image.load(droneImage).convert()
 angleFromCenter = (2 * np.pi) / NUM_DRONES
 
 # Grid
-SHOW_GRID = True
+SHOW_GRID = False
 
 if SHOW_GRID:
     for row in range(THICC, WINDOW_HEIGHT, THICC):
@@ -191,15 +191,19 @@ for depth in range(MAX_DEPTH):
 
 depth = 0
 
-while 1:
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
     for i in range(NUM_DRONES):
-        moveDrone(screen, background,
-                  AQSupervisor.dronesList[i], paths[i][depth])
+        try:
+            moveDrone(screen, background,
+                      AQSupervisor.dronesList[i], paths[i][depth])
+        except IndexError:
+            print("Simulation Finished")
+            exit(0)
 
-    depth = depth + 1
+    depth += 1
 
     pygame.display.update()

@@ -2,16 +2,17 @@ from pathFind import *
 import numpy as np
 
 GRID_SIZE = 15
-grid = []
+MVNODERATE = 0.05
 DRONE_POS = Position(2, 2)
 
+grid = []
 for row in range(GRID_SIZE):
     gridRow = []
     for col in range(GRID_SIZE):
         canGo = row != 0 and row != GRID_SIZE - 1 and col != 0 and col != GRID_SIZE - 1
         isDrone = row == 2 and col == 2
         gridRow.append(
-            Node(Position(col, row), canGo and not isDrone, np.random.random() <= 0.05 and canGo and not isDrone))
+            Node(Position(col, row), canGo and not isDrone, np.random.random() <= MVNODERATE and canGo and not isDrone))
     grid.append(gridRow)
 
 navGrid = NavigationGrid(grid)
