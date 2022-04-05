@@ -83,7 +83,7 @@ drone = pygame.image.load(droneImage).convert()
 angleFromCenter = (2 * np.pi) / NUM_DRONES
 
 # Grid
-SHOW_GRID = False
+SHOW_GRID = True
 
 if SHOW_GRID:
     for row in range(THICC, WINDOW_HEIGHT, THICC):
@@ -113,6 +113,7 @@ for row in range(grid_rows):
 
     grid.append(curr_row)
 
+navGrid = NavigationGrid(grid)
 MVNodes = set()
 for row in range(grid_rows):
     for col in range(grid_cols):
@@ -137,12 +138,7 @@ for i in range(NUM_DRONES):
 def isValid(pixel, x, y):
     if np.linalg.norm(np.array([x, y]) - np.array(SUPERVISOR_POS)) < 33:
         return False
-
-    if pixel[2] > 200:
-        return True
-
-    else:
-        return False
+    return pixel[2] > 200
 
 
 def samplePoint(map, paths):
@@ -180,6 +176,10 @@ def generatePath(map, sampled, path, step):
         else:
             break
 
+
+for drone in AQSupervisor.dronesList:
+    startState = StateSpace(
+        Position(drone.position[0], drone.position[1]), [], MVNodes, navGrid)
 
 paths = []
 for drone in AQSupervisor.dronesList:
