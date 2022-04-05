@@ -177,9 +177,10 @@ def generatePath(map, sampled, path, step):
             break
 
 
-for drone in AQSupervisor.dronesList:
-    startState = StateSpace(
-        Position(drone.position[0], drone.position[1]), [], MVNodes, navGrid)
+# for drone in AQSupervisor.dronesList:
+#     startState = StateSpace(
+#         Position(drone.position[0], drone.position[1]), [], MVNodes, navGrid)
+
 
 paths = []
 for drone in AQSupervisor.dronesList:
