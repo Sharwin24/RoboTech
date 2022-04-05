@@ -40,27 +40,25 @@ class NavigationGrid():
         width = len(self.grid[0])  # Assuming a 2D Matrix
         return p.x >= 0 and p.x < width and p.y >= 0 and p.y < height
 
-    def isWall(self, p: Position) -> bool:
-        return not self.grid[p.y][p.x].isTraversable
+    def isTraversable(self, p: Position) -> bool:
+        return self.grid[p.y][p.x].isTraversable
 
 
 def getNeighbors(p: Position, navGrid: NavigationGrid) -> List[Position]:
     assert(isinstance(p, Position))
-    pX = p.x
-    pY = p.y
-    up = Position(pX, pY + 1)
-    down = Position(pX, pY - 1)
-    left = Position(pX - 1, pY)
-    right = Position(pX + 1, pY)
-    upRight = Position(pX + 1, pY + 1)
-    upLeft = Position(pX - 1, pY + 1)
-    downRight = Position(pX + 1, pY - 1)
-    downLeft = Position(pX - 1, pY - 1)
+    up = Position(p.x, p.y + 1)
+    down = Position(p.x, p.y - 1)
+    left = Position(p.x - 1, p.y)
+    right = Position(p.x + 1, p.y)
+    upRight = Position(p.x + 1, p.y + 1)
+    upLeft = Position(p.x - 1, p.y + 1)
+    downRight = Position(p.x + 1, p.y - 1)
+    downLeft = Position(p.x - 1, p.y - 1)
     possiblePositions = [up, down, left, right,
                          upRight, upLeft, downRight, downLeft]
     neighbors = []
     for p in possiblePositions:
-        if navGrid.inBounds(p) and not navGrid.isWall(p):
+        if navGrid.inBounds(p) and navGrid.isTraversable(p):
             neighbors.append(p)
     return neighbors
 
