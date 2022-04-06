@@ -122,18 +122,16 @@ class PQ(PriorityQueue):
         return s in self.queue
 
 
-def shortestPath(startingState: StateSpace) -> Tuple[int, List[Position]]:
+def shortestPath(startingState: StateSpace) -> List[Position]:
     '''Finds the shortest path, such that all MVNodes are visited, from a starting state using A* search'''
-    totalNodesTraversed = 0
     q = PQ()
     q._put((startingState.getFCost(), startingState))
     visitedStates = set()
     while q._qsize() != 0:
         currentState = q._get()
         assert(isinstance(currentState[1], StateSpace))
-        totalNodesTraversed += 1
         if currentState[1].isGoalState():
-            return (totalNodesTraversed, currentState[1].getPath())
+            return currentState[1].getPath()
         neighbors = currentState[1].getSuccessors()
         for state in neighbors:
             assert(isinstance(state, StateSpace))

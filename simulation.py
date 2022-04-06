@@ -1,5 +1,6 @@
 import pygame
 import sys
+from aStarPathGeneration import *
 from pathFind import *
 import numpy as np
 from AquaticDrones import *
@@ -177,10 +178,6 @@ def generatePath(map, sampled, path, step):
             break
 
 
-for drone in AQSupervisor.dronesList:
-    startState = StateSpace(
-        Position(drone.position[0], drone.position[1]), [], MVNodes, navGrid)
-
 paths = []
 for drone in AQSupervisor.dronesList:
     paths.append([drone.position])
@@ -191,21 +188,49 @@ for depth in range(MAX_DEPTH):
         sampled = samplePoint(background_arr, paths[i])
         generatePath(background_arr, sampled, paths[i], STEP_SIZE)
 
+AStarPaths = []
+maxPathLen = 0
+# Generate starting stateSpaces for every drone and find their path using A* search
+for id, drone in enumerate(AQSupervisor.dronesList):
+    droneNavGrid = getADronesQuadrantGrid(NUM_DRONES, id, navGrid)
+    MVNodesForGrid = getMVNodeSetFromGrid(droneNavGrid)
+    dronePos = Position(drone.position[0], drone.position[1])
+    startState = StateSpace(
+        dronePos, [dronePos], MVNodesForGrid, droneNavGrid)
+    dronePath = shortestPath(startState)  # Call A* Search
+    maxPathLen = max(maxPathLen, len(dronePath))
+    AStarPaths.append(dronePath)
 
-depth = 0
-while True:
+AStarPathDepth = 0
+while AStarPathDepth < maxPathLen:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
-    for i in range(NUM_DRONES):
+    for droneID in range(NUM_DRONES):
         try:
             moveDrone(screen, background,
-                      AQSupervisor.dronesList[i], paths[i][depth])
+                      AQSupervisor.dronesList[droneID], AStarPaths[droneID][AStarPathDepth])
         except IndexError:
-            print("Simulation Finished")
-            exit(0)
-
-    depth += 1
-
+            pass
+    AStarPathDepth += 1
     pygame.display.update()
+
+
+# depth = 0
+# while True:
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             sys.exit()
+
+#     for i in range(NUM_DRONES):
+#         try:
+#             moveDrone(screen, background,
+#                       AQSupervisor.dronesList[i], paths[i][depth])
+#         except IndexError:
+#             print("Simulation Finished")
+#             exit(0)
+
+#     depth += 1
+
+#     pygame.display.update()

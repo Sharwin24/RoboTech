@@ -1,7 +1,7 @@
 from pathFind import *
 import numpy as np
 
-GRID_SIZE = 10  # Above 10 starts getting hard on complexity
+GRID_SIZE = 8  # Above 10 starts getting hard on complexity
 MVNODE_RATE = 0.05  # 0.1 for more MV Nodes
 DRONE_POS = Position(int(np.random.random() * GRID_SIZE - 1),
                      int(np.random.random() * GRID_SIZE - 1))
@@ -24,17 +24,18 @@ for r in range(GRID_SIZE):
         n = grid[r][c]
         assert(isinstance(n, Node))
         if n.position == DRONE_POS:
-            print("D", end="")
+            print(" DR ", end="")
         elif n.isMustVisitNode:
-            print("M", end="")
+            print(" MV ", end="")
             MVNodes.add(n.position)
         elif n.isTraversable:
-            print(".", end="")
+            print(" TV ", end="")
         else:
-            print("#", end="")
+            print(" NT ", end="")
     print("\n")
-startState = StateSpace(DRONE_POS, [], MVNodes, navGrid)
+startState = StateSpace(DRONE_POS, [DRONE_POS], MVNodes, navGrid)
 print("# of MustVisitNodes: " + str(len(MVNodes)))
 distance_path = shortestPath(startState)
 print("Nodes Traversed: " +
-      str(distance_path[0]) + " | Path: " + str(distance_path[1]))
+      str(len(distance_path)) + " | Path: " + str(distance_path))
+print("Drone Pos: " + str(DRONE_POS))
