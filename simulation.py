@@ -4,7 +4,6 @@ from pathFind import *
 import numpy as np
 from AquaticDrones import *
 np.random.seed(1)
-
 # Functions
 
 
@@ -38,11 +37,11 @@ THICC = 12
 SUPERVISOR_POS = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
 # Drone constants
-NUM_DRONES = 24  # 15
+NUM_DRONES = 10  # 15
 DRONE_OFFSET = 50  # 40
 DRONE_SPEED = 0.1
 STEP_SIZE = 0.4  # 0.3
-MAX_DEPTH = 23  # 20
+MAX_DEPTH = 15  # 20
 
 # Algae Processing
 
@@ -83,7 +82,7 @@ drone = pygame.image.load(droneImage).convert()
 angleFromCenter = (2 * np.pi) / NUM_DRONES
 
 # Grid
-SHOW_GRID = True
+SHOW_GRID = False
 
 if SHOW_GRID:
     for row in range(THICC, WINDOW_HEIGHT, THICC):
@@ -113,13 +112,10 @@ for row in range(grid_rows):
 
     grid.append(curr_row)
 
-navGrid = NavigationGrid(grid)
-MVNodes = set()
 for row in range(grid_rows):
     for col in range(grid_cols):
         if grid[row][col].isMustVisitNode:
             assert(isinstance(grid[row][col], Node))
-            MVNodes.add(grid[row][col].position)
             centerblit(screen, algae, (col * THICC +
                        THICC // 2, row * THICC + THICC // 2))
 
@@ -175,11 +171,6 @@ def generatePath(map, sampled, path, step):
             path.append((x, y))
         else:
             break
-
-
-# for drone in AQSupervisor.dronesList:
-#     startState = StateSpace(
-#         Position(drone.position[0], drone.position[1]), [], MVNodes, navGrid)
 
 
 paths = []
