@@ -5,6 +5,8 @@ More Information can be found on their [Website](https://gt-robotech.com/)
 # Our Submission
 We are submitting to the Software and Body Track. If you're reading this README, you've probably found your way to our [Github](https://github.com/Sharwin24/RoboTech) page. Our official submission was made to the [DevPost](https://robotech2022.devpost.com/) page.
 
+Watch our simulation on [Youtube](https://www.youtube.com/watch?v=irKteNY1Mms).
+
 # The Problem Statement
 One of the most detrimental factors to the environment is the pollution and destruction to the oceans and all marine life. Aquatic habitats are incredibly beneficial for the sustainability of the planet since they act as massive carbon sinks and lower overall greenhouse gas emissions.
 
